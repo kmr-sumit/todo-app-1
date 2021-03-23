@@ -1,27 +1,31 @@
 import React, { useState } from "react";
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
+import * as todoService from '../services/TodoService'
 
 function TodoList() {
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState(todoService.getAllTodos());
     const addTodo = (todo) => {
         if (!todo.text || /^\s*$/.test(todo.text)) {
             return;
         }
-        const newTodos = [todo, ...todos];
-        setTodos(newTodos);
+        todoService.insertTodo(todo);
+        // const newTodos = [todo, ...todos];
+        setTodos(todoService.getAllTodos());
     };
     const updateTodo = (todoId, newValue) => {
         if (!newValue.text || /^\s*$/.test(newValue.text)) {
             return;
         }
-
-        setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
+        todoService.updateTodo(todoId,newValue);
+        // setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
+        setTodos(todoService.getAllTodos())
     };
     const removeTodo = id => {
         const removedArr = [...todos].filter(todo => todo.id !== id);
-
-        setTodos(removedArr);
+        // call service of delete
+        todoService.deleteTodo(id);
+        setTodos(todoService.getAllTodos());
     };
 
 
